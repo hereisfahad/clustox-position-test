@@ -1,56 +1,61 @@
-import {
-  Link as ChakraLink,
-  Text,
-  Code,
-  List,
-  ListIcon,
-  ListItem,
-} from '@chakra-ui/react'
-import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
+import { Text } from '@chakra-ui/react'
+import { gql, useQuery } from '@apollo/client'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
-import { Hero } from '../components/Hero'
-import { Container } from '../components/Container'
-import { Main } from '../components/Main'
-import { DarkModeSwitch } from '../components/DarkModeSwitch'
-import { CTA } from '../components/CTA'
-import { Footer } from '../components/Footer'
+import { Container } from '@/components/Container'
 
-const Index = () => (
-  <Container height="100vh">
-    <Hero />
-    <Main>
-      <Text>
-        Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{' '}
-        <Code>typescript</Code>.
+const ViewerQuery = gql`
+  query ViewerQuery {
+    viewer {
+      id
+      email
+    }
+  }
+`
+
+const Index = () => {
+  const router = useRouter()
+  const {
+    data,
+    loading,
+    error,
+  } = useQuery(ViewerQuery);
+  const viewer = data?.viewer
+  const shouldRedirect = !(loading || error || viewer)
+
+  useEffect(() => {
+    if (shouldRedirect) {
+      router.push('/login')
+    }
+  }, [shouldRedirect])
+
+  if (loading) return <p>Loading...</p>
+
+  return (
+    <Container height="100vh">
+      <Text
+        fontSize="3xl"
+        fontWeight="bold"
+        color="gray.800"
+        mt="2rem"
+      >
+        You're signed in as {viewer?.email}
       </Text>
-
-      <List spacing={3} my={0}>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink
-            isExternal
-            href="https://chakra-ui.com"
-            flexGrow={1}
-            mr={2}
-          >
-            Chakra UI <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink isExternal href="https://nextjs.org" flexGrow={1} mr={2}>
-            Next.js <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-      </List>
-    </Main>
-
-    <DarkModeSwitch />
-    <Footer>
-      <Text>Next ❤️ Chakra</Text>
-    </Footer>
-    <CTA />
-  </Container>
-)
+    </Container>
+  )
+}
 
 export default Index
+
+export const getServerSideProps = async (ctx) => {
+  const { req } = ctx
+  const { cookies } = req
+  if (cookies['clustox-position-test-token']) return { props: {} }
+  else return {
+    redirect: {
+      permanent: false,
+      destination: "/login",
+    },
+  };
+}
