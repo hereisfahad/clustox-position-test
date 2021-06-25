@@ -42,6 +42,10 @@ NEXT_PUBLIC_BASE_URL=
 - [Google Conformance](https://web.dev/conformance)
 - [Vercel](https://vercel.com)
 
+## Lighthouse Score
+![Lighthouse Audit - Chrome](./images/lighthouse.png)
+![Lighthouse Different Zones Audit - lighthouse-metrics.com](./images/lighthouse-zones.png)
+
 ## Live link
 [Visit the link](https://clustox-position-test.vercel.app)
 
