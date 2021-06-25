@@ -1,11 +1,9 @@
-import { Flex, useColorMode, FlexProps } from '@chakra-ui/react'
+import { Flex, FlexProps } from '@chakra-ui/react'
+
 import Navbar from './Navbar'
-export const Container = (props: FlexProps) => {
-  const { colorMode } = useColorMode()
 
-  const bgColor = { light: 'gray.50', dark: 'gray.900' }
+const Container = (props: FlexProps) => {
 
-  const color = { light: 'black', dark: 'white' }
   return (
     <>
       <Navbar />
@@ -13,10 +11,12 @@ export const Container = (props: FlexProps) => {
         direction="column"
         alignItems="center"
         justifyContent="flex-start"
-        bg={bgColor[colorMode]}
-        color={color[colorMode]}
+        bg="gray.50"
+        color="black"
         {...props}
       />
     </>
   )
 }
+
+export default Container
