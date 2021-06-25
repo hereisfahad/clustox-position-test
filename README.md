@@ -2,10 +2,6 @@
 
 This is the solution of clustox position test. It is a simple auth app with login and register.
 
-## Overview
-
-- `pages/api/*` - [API routes](https://nextjs.org/docs/api-routes/introduction) powering [`/dashboard`](https://leerob.io/dashboard), newsletter subscription, and post views.
-
 ## Running Locally
 
 ```bash
