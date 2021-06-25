@@ -32,7 +32,7 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     await signOut()
-    await client.resetStore()
+    await client.clearStore()
     push('/login')
   }
 
