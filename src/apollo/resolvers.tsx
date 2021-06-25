@@ -20,6 +20,11 @@ export const resolvers = {
   },
   Mutation: {
     async signUp(_parent, args, context, _info) {
+      const usernameAlreadyExists: any = await findUser({ username: args.input.username })
+      if (usernameAlreadyExists) throw new UserInputError('Username not available.')
+      const emailAleradyExists: any = await findUser({ email: args.input.email })
+      if (emailAleradyExists) throw new UserInputError('User with this email already exists.')
+
       const user: any = await createUser(args.input)
       const session = {
         id: user.id,
