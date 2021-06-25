@@ -7,7 +7,7 @@ import {
 } from '@apollo/client';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/api/graphql'
+  uri: process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/graphql` : `http://localhost:3000/api/graphql`,
 });
 
 const client = new ApolloClient({
