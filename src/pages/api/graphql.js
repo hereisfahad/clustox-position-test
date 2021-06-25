@@ -14,6 +14,7 @@ const dbConnect = async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
+    useCreateIndex: true
   });
 }
 
