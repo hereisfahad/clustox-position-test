@@ -1,9 +1,9 @@
-import { Text } from '@chakra-ui/react'
+import { Text, Box, Spinner } from '@chakra-ui/react'
+import Head from 'next/head';
 import { gql, useQuery } from '@apollo/client'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 
-import { Container } from '@/components/Container'
+import Container from '@/components/Container'
+import Page from '@/components/Page';
 
 export const ViewerQuery = gql`
   query ViewerQuery {
@@ -14,24 +14,20 @@ export const ViewerQuery = gql`
     }
   }
 `
-
-const Index = () => {
-  const router = useRouter()
+const Home = () => {
   const {
     data,
     loading,
-    error,
   } = useQuery(ViewerQuery);
   const viewer = data?.viewer
-  const shouldRedirect = !(loading || error || viewer)
 
-  useEffect(() => {
-    if (shouldRedirect) {
-      router.push('/login')
-    }
-  }, [shouldRedirect, router])
-
-  if (loading) return <p>Loading...</p>
+  if (loading) {
+    return (
+      <Box display="flex" height="100vh" justifyContent="center" alignItems="center">
+        <Spinner color="purple.500" size="xl" />
+      </Box>
+    )
+  }
 
   return (
     <Container height="100vh">
@@ -41,20 +37,29 @@ const Index = () => {
         color="gray.800"
         mt="2rem"
       >
-       {`You're signed in as ${viewer?.email}`}
+        {`You're signed in as ${viewer?.email}`}
       </Text>
     </Container>
   )
 }
 
-export default Index
 
-export const getServerSideProps = async ({ req: { cookies } }) => {
-  if (cookies['clustox-position-test-token']) return { props: {} }
-  else return {
-    redirect: {
-      permanent: false,
-      destination: "/login",
-    },
-  };
-}
+const HomePage = () => (
+  <Page name="Home" path="/">
+    <Head>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            if (!document.cookie.includes('clustox-position-test-token')) {
+              window.location.href = "/login"
+            }
+          `
+        }}
+      />
+    </Head>
+    <Home />
+  </Page>
+);
+
+export default HomePage
+

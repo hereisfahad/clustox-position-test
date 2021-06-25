@@ -1,7 +1,7 @@
 import { AuthenticationError, UserInputError } from 'apollo-server-micro'
-import { createUser, findUser, validatePassword } from '../lib/user'
-import { setLoginSession, getLoginSession } from '../lib/auth'
-import { removeTokenCookie } from '../lib/auth-cookies'
+import { createUser, findUser, validatePassword } from '@/lib/user'
+import { setLoginSession, getLoginSession } from '@/lib/auth'
+import { removeTokenCookie } from '@/lib/auth-cookies'
 
 export const resolvers = {
   Query: {

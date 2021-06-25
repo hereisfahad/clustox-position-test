@@ -36,7 +36,7 @@ const Navbar = () => {
     push('/login')
   }
 
-  const { viewer } = client.readQuery({
+  const data = client.readQuery({
     query: ViewerQuery,
   });
 
@@ -75,7 +75,7 @@ const Navbar = () => {
       <Flex justifyContent="center" alignItems="center">
         <Menu autoSelect={false}>
           <MenuButton _hover={{ color: "primary" }} color="secondary">
-            <Avatar name={viewer?.name} size="sm" bg="primary" />
+            <Avatar name={data?.viewer?.name} size="sm" bg="primary" />
             <Icon as={TriangleDownIcon} />
           </MenuButton>
           <MenuList>

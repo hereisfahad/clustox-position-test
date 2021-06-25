@@ -2,6 +2,7 @@ import NextLink from 'next/link'
 import { useForm } from 'react-hook-form';
 import { gql, useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
+import Head from 'next/head';
 import {
   Button,
   Flex,
@@ -12,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 
 import TextField from '@/components/TextField'
+import Page from '@/components/Page';
 
 const LOGIN_USER = gql`
   mutation LoginUser(
@@ -145,16 +147,22 @@ const Login = () => {
   );
 };
 
-export default Login;
+const LoginPage = () => (
+  <Page name="Login" path="/login">
+    <Head>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+                if (document.cookie.includes('clustox-position-test-token')) {
+                window.location.href = "/"
+                }
+            `
+        }}
+      />
+    </Head>
+    <Login />
+  </Page>
+);
 
-export const getServerSideProps = async ({ req: { cookies } }) => {
-  if (cookies['clustox-position-test-token']) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/",
-      },
-    }
-  }
-  else return { props: {} }
-}
+export default LoginPage;
+

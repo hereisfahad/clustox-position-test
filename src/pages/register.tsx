@@ -2,6 +2,7 @@ import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router'
 import { gql, useMutation } from '@apollo/client'
+import Head from 'next/head';
 import {
   Button,
   Flex,
@@ -12,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 
 import TextField from '@/components/TextField'
+import Page from '@/components/Page'
 
 const REGISTER_USER = gql`
   mutation SignupMutation(
@@ -174,16 +176,22 @@ const Register = () => {
   );
 };
 
-export default Register;
+const RegisterPage = () => (
+  <Page name="Register" path="/register">
+    <Head>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+                if (document.cookie.includes('clustox-position-test-token')) {
+                window.location.href = "/"
+                }
+            `
+        }}
+      />
+    </Head>
+    <Register />
+  </Page>
+);
 
-export const getServerSideProps = async ({ req: { cookies } }) => {
-  if (cookies['clustox-position-test-token']) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/",
-      },
-    }
-  }
-  else return { props: {} }
-}
+export default RegisterPage;
+
