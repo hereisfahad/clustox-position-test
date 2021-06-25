@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { HamburgerIcon, CloseIcon, TriangleDownIcon } from "@chakra-ui/icons"
 import { useRouter } from 'next/router'
-import { gql, useMutation } from '@apollo/client'
+import { gql, useMutation, useApolloClient } from '@apollo/client'
 import {
   Box,
   Flex,
@@ -22,16 +22,23 @@ const SignOutMutation = gql`
 `
 import CustomMenuLink from './CustomMenuLink';
 import CustomNavLink from './CustomNavLink';
+import { ViewerQuery } from 'pages';
 
 const Navbar = () => {
+  const client = useApolloClient()
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const { push } = useRouter()
   const [signOut] = useMutation(SignOutMutation)
 
   const handleSignOut = async () => {
     await signOut()
+    await client.resetStore()
     push('/login')
   }
+
+  const { viewer } = client.readQuery({
+    query: ViewerQuery,
+  });
 
   return (
     <Flex
@@ -68,7 +75,7 @@ const Navbar = () => {
       <Flex justifyContent="center" alignItems="center">
         <Menu autoSelect={false}>
           <MenuButton _hover={{ color: "primary" }} color="secondary">
-            <Avatar name="Profile Pic" size="sm" src="avatar.png" bg="primary" />
+            <Avatar name={viewer?.name} size="sm" bg="primary" />
             <Icon as={TriangleDownIcon} />
           </MenuButton>
           <MenuList>
