@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import NextLink from 'next/link'
 import { useForm } from 'react-hook-form';
 import { gql, useMutation } from '@apollo/client'
@@ -13,6 +12,7 @@ import {
   Stack,
   Link,
   Text,
+  useToast
 } from '@chakra-ui/react';
 
 const LOGIN_USER = gql`
@@ -37,8 +37,8 @@ const LOGIN_USER = gql`
 `
 
 const Login = () => {
+  const toast = useToast()
   const { push } = useRouter()
-  const [loading, setLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -47,18 +47,23 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const [signin] = useMutation(LOGIN_USER, {
+  const [signin, { loading }] = useMutation(LOGIN_USER, {
     variables: getValues(),
     onCompleted: () => {
       push('/');
+    },
+    onError: ({ graphQLErrors }) => {
+      graphQLErrors.map(({ message }) => (
+        toast({
+          title: 'Error',
+          description: message,
+          status: 'error',
+          duration: 4000,
+          isClosable: true
+        })
+      ))
     }
   });
-
-  const onLogin = async () => {
-    setLoading(true);
-    await signin()
-    setLoading(false);
-  };
 
   return (
     <Flex align="center" justify="center" h="100vh" backgroundColor="gray.100">
@@ -67,7 +72,7 @@ const Login = () => {
         backgroundColor="white"
         borderRadius={[0, 8]}
         maxWidth="400px"
-        onSubmit={handleSubmit((data) => onLogin())}
+        onSubmit={handleSubmit(signin)}
         px={8}
         py={12}
         marginX={4}
@@ -144,7 +149,7 @@ const Login = () => {
               fontSize="sm"
               mb={1}
             >
-              Don't have an account?
+              {`Don't have an account?`}
             </Link>
           </NextLink>
 
@@ -156,9 +161,7 @@ const Login = () => {
 
 export default Login;
 
-export const getServerSideProps = async (ctx) => {
-  const { req } = ctx
-  const { cookies } = req
+export const getServerSideProps = async ({ req: { cookies } }) => {
   if (cookies['clustox-position-test-token']) {
     return {
       redirect: {

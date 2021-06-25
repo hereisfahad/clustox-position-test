@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router'
@@ -13,6 +12,7 @@ import {
   Stack,
   Link,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 
 const REGISTER_USER = gql`
@@ -41,8 +41,8 @@ const REGISTER_USER = gql`
 `
 
 const Register = () => {
+  const toast = useToast()
   const { push } = useRouter()
-  const [loading, setLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -51,18 +51,23 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const [signup] = useMutation(REGISTER_USER, {
+  const [signup, { loading }] = useMutation(REGISTER_USER, {
     variables: getValues(),
     onCompleted: () => {
       push('/');
+    },
+    onError: ({ graphQLErrors }) => {
+      graphQLErrors.map(({ message }) => (
+        toast({
+          title: 'Error',
+          description: message,
+          status: 'error',
+          duration: 4000,
+          isClosable: true
+        })
+      ))
     }
   });
-
-  const onRegister = async () => {
-    setLoading(true)
-    await signup()
-    setLoading(false)
-  };
 
   return (
     <Flex align="center" justify="center" h="100vh" backgroundColor="gray.100">
@@ -71,7 +76,7 @@ const Register = () => {
         backgroundColor="white"
         borderRadius={[0, 8]}
         maxWidth="400px"
-        onSubmit={handleSubmit((data) => onRegister())}
+        onSubmit={handleSubmit(signup)}
         px={8}
         py={12}
         marginX={4}
@@ -200,9 +205,7 @@ const Register = () => {
 
 export default Register;
 
-export const getServerSideProps = async (ctx) => {
-  const { req } = ctx
-  const { cookies } = req
+export const getServerSideProps = async ({ req: { cookies } }) => {
   if (cookies['clustox-position-test-token']) {
     return {
       redirect: {

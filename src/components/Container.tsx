@@ -8,7 +8,7 @@ export const Container = (props: FlexProps) => {
   const color = { light: 'black', dark: 'white' }
   return (
     <>
-    <Navbar/>
+      <Navbar />
       <Flex
         direction="column"
         alignItems="center"

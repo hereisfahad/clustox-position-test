@@ -5,11 +5,12 @@ import { useEffect } from 'react'
 
 import { Container } from '@/components/Container'
 
-const ViewerQuery = gql`
+export const ViewerQuery = gql`
   query ViewerQuery {
     viewer {
       id
       email
+      name
     }
   }
 `
@@ -28,7 +29,7 @@ const Index = () => {
     if (shouldRedirect) {
       router.push('/login')
     }
-  }, [shouldRedirect])
+  }, [shouldRedirect, router])
 
   if (loading) return <p>Loading...</p>
 
@@ -40,7 +41,7 @@ const Index = () => {
         color="gray.800"
         mt="2rem"
       >
-        You're signed in as {viewer?.email}
+       {`You're signed in as ${viewer?.email}`}
       </Text>
     </Container>
   )
@@ -48,9 +49,7 @@ const Index = () => {
 
 export default Index
 
-export const getServerSideProps = async (ctx) => {
-  const { req } = ctx
-  const { cookies } = req
+export const getServerSideProps = async ({ req: { cookies } }) => {
   if (cookies['clustox-position-test-token']) return { props: {} }
   else return {
     redirect: {
