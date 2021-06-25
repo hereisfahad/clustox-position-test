@@ -20,7 +20,7 @@ export const resolvers = {
   },
   Mutation: {
     async signUp(_parent, args, context, _info) {
-      const user = await createUser(args.input)
+      const user: any = await createUser(args.input)
       const session = {
         id: user.id,
         email: user.email,
