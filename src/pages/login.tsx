@@ -5,15 +5,13 @@ import { useRouter } from 'next/router'
 import {
   Button,
   Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
   Stack,
   Link,
   Text,
   useToast
 } from '@chakra-ui/react';
+
+import TextField from '@/components/TextField'
 
 const LOGIN_USER = gql`
   mutation LoginUser(
@@ -83,37 +81,25 @@ const Login = () => {
         <Flex justify="center">
           <Text fontWeight="bold" fontSize="2xl">Login</Text>
         </Flex>
-        <FormControl isInvalid={errors.email && errors.email.message}>
-          <FormLabel htmlFor="email">Email Address</FormLabel>
-          <Input
-            autoFocus
-            aria-label="Email Address"
-            id="email"
-            name="email"
-            {...register("email", {
-              required: 'Please enter your email.'
-            })}
-            placeholder="name@site.com"
-          />
-          <FormErrorMessage>
-            {errors.email && errors.email.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={errors.password && errors.password.message}>
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <Input
-            aria-label="Password"
-            name="password"
-            id="password"
-            type="password"
-            {...register("password", {
-              required: 'Please enter a password.'
-            })}
-          />
-          <FormErrorMessage>
-            {errors.password && errors.password.message}
-          </FormErrorMessage>
-        </FormControl>
+        <TextField
+          autoFocus
+          {...register("email", {
+            required: 'Please enter your email.'
+          })}
+          errorMessage={errors.email && errors.email.message}
+          label="Email Address"
+          name="email"
+          placeholder="name@site.com"
+        />
+        <TextField
+          type="password"
+          errorMessage={errors.password && errors.password.message}
+          label="Password"
+          name="password"
+          {...register("password", {
+            required: 'Please enter a password.'
+          })}
+        />
         <Button
           id="login"
           type="submit"

@@ -5,15 +5,13 @@ import { gql, useMutation } from '@apollo/client'
 import {
   Button,
   Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
   Stack,
   Link,
   Text,
   useToast,
 } from '@chakra-ui/react';
+
+import TextField from '@/components/TextField'
 
 const REGISTER_USER = gql`
   mutation SignupMutation(
@@ -86,90 +84,63 @@ const Register = () => {
         <Flex justify="center">
           <Text fontWeight="bold" fontSize="2xl">Register</Text>
         </Flex>
-        <FormControl isInvalid={errors.username && errors.username.message}>
-          <FormLabel htmlFor="username">Username</FormLabel>
-          <Input
-            autoFocus
-            aria-label="Username"
-            id="username"
-            name="username"
-            size="sm"
-            {...register("username", {
-              required: 'Please enter your username.',
-              maxLength: {
-                value: 100,
-                message: 'Username cannot be more than 100 characters.'
-              }
-            })}
-            placeholder="jhondoe"
-          />
-          <FormErrorMessage>
-            {errors.username && errors.username.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={errors.name && errors.name.message}>
-          <FormLabel htmlFor="name">Name</FormLabel>
-          <Input
-            aria-label="Name"
-            id="name"
-            name="name"
-            size="sm"
-            {...register("name", {
-              required: 'Please enter your name.',
-              maxLength: {
-                value: 100,
-                message: 'Name cannot be more than 100 characters.'
-              }
-            })}
-            placeholder="Jhon Doe"
-          />
-          <FormErrorMessage>
-            {errors.name && errors.name.message}
-          </FormErrorMessage>
 
-        </FormControl>
-        <FormControl isInvalid={errors.email && errors.email.message}>
+        <TextField
+          autoFocus
+          {...register("username", {
+            required: 'Please enter your username.',
+            maxLength: {
+              value: 100,
+              message: 'Username cannot be more than 100 characters.'
+            }
+          })}
+          errorMessage={errors.username && errors.username.message}
+          label="Username"
+          name="username"
+          placeholder="jhondoe"
+        />
 
-          <FormLabel htmlFor="email">Email Address</FormLabel>
-          <Input
-            aria-label="Email Address"
-            id="email"
-            name="email"
-            size="sm"
-            {...register("email", {
-              required: 'Please enter your email.',
-              maxLength: {
-                value: 100,
-                message: 'Email cannot be more than 100 characters.'
-              }
-            })}
-            placeholder="name@site.com"
-          />
-          <FormErrorMessage>
-            {errors.email && errors.email.message}
-          </FormErrorMessage>
-        </FormControl>
+        <TextField
+          {...register("name", {
+            required: 'Please enter your name.',
+            maxLength: {
+              value: 100,
+              message: 'Name cannot be more than 100 characters.'
+            }
+          })}
+          errorMessage={errors.name && errors.name.message}
+          label="Name"
+          name="name"
+          placeholder="Jhon Doe"
+        />
 
-        <FormControl isInvalid={errors.password && errors.password.message}>
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <Input
-            aria-label="Password"
-            name="password"
-            id="password"
-            type="password"
-            size="sm"
-            {...register("password", {
-              required: 'Please enter a password.',
-              maxLength: {
-                value: 30,
-                message: 'Password cannot be more than 100 characters.'
-              }
-            })}
-          />
-          <FormErrorMessage>
-            {errors.password && errors.password.message}
-          </FormErrorMessage>
-        </FormControl>
+        <TextField
+          {...register("email", {
+            required: 'Please enter your email.',
+            maxLength: {
+              value: 100,
+              message: 'Email cannot be more than 100 characters.'
+            }
+          })}
+          errorMessage={errors.email && errors.email.message}
+          label="Email Address"
+          name="email"
+          placeholder="Jhon Doe"
+        />
+
+        <TextField
+          {...register("password", {
+            required: 'Please enter a password.',
+            maxLength: {
+              value: 30,
+              message: 'Password cannot be more than 100 characters.'
+            }
+          })}
+          errorMessage={errors.password && errors.password.message}
+          label="Password"
+          name="password"
+        />
+
         <Button
           id="register"
           type="submit"
