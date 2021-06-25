@@ -1,8 +1,9 @@
 import NextLink from 'next/link';
 import { Link, MenuItem } from '@chakra-ui/react';
 import { useRouter } from 'next/router'
+import { ReactNode } from "react";
 
-const CustomMenuLink = ({ href, children }) => {
+const CustomMenuLink = ({ href, children }: { href: string, children: ReactNode }) => {
   const router = useRouter()
   return (
     <>

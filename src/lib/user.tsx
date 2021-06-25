@@ -3,7 +3,14 @@ import bcrypt from 'bcrypt';
 import User from "@/models/User";
 const SALT_ROUNDS = 10;
 
-export async function createUser({ password, ...rest }) {
+interface UserType {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+}
+
+export async function createUser({ password, ...rest }: { password: string }) {
   password = await bcrypt.hash(password, SALT_ROUNDS);
   let user = {
     password,
@@ -13,11 +20,11 @@ export async function createUser({ password, ...rest }) {
   return user
 }
 
-export async function findUser(query) {
+export async function findUser(query: any) {
   return User.findOne(query)
 }
 
-export async function validatePassword(user, inputPassword) {
+export async function validatePassword(user: UserType, inputPassword: string) {
   const matched = await bcrypt.compare(inputPassword, user.password);
   return matched
 }

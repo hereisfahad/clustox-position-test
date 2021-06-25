@@ -1,9 +1,10 @@
 import Iron from '@hapi/iron'
 import { MAX_AGE, setTokenCookie, getTokenCookie } from './auth-cookies'
+import { NextApiRequest, NextApiResponse } from "next";
 
-const TOKEN_SECRET = process.env.TOKEN_SECRET
+const TOKEN_SECRET = process.env.TOKEN_SECRET || ""
 
-export async function setLoginSession(res, session) {
+export async function setLoginSession(res: NextApiResponse, session: any) {
   const createdAt = Date.now()
   // Create a session object with a max age that we can validate later
   const obj = { ...session, createdAt, maxAge: MAX_AGE }
@@ -11,7 +12,7 @@ export async function setLoginSession(res, session) {
   setTokenCookie(res, token)
 }
 
-export async function getLoginSession(req) {
+export async function getLoginSession(req: NextApiRequest) {
   const token = getTokenCookie(req)
 
   if (!token) return
